@@ -1,10 +1,11 @@
 from bs4 import BeautifulSoup, SoupStrainer
-from gtts import gTTS
 import requests
 import os
 import sys
 try:
-    article_links=input("enter\n")
+    flag="idlelib" in sys.modules
+    name=input("enter the company name like Amazon\n")
+    article_links="http://www.geeksforgeeks.org/tag/"+name+"/"
     path="/home/amit/Desktop/"
     non_bmp_map = dict.fromkeys(range(0x10000, sys.maxunicode + 1), 0xfffd)
     headers = {
@@ -27,14 +28,21 @@ try:
         for header in page.find_all('header',{'class':'entry-header'}):
             for titl in header.find_all('h1',{'class':'entry-title'}):
                 title=titl.text
-        print(path+title+' .txt')
+        #print(path+title+' .txt')
         article_detail.append(title)
         fob=open(path+title+' .txt','w')        
         for article in page.find_all('div',{'class':'entry-content'}):
-            for paragraph in page.find_all(["p","ol"]):
-                article_detail.append(paragraph.text.translate(non_bmp_map))
-                article= "\n".join(article_detail)
-        print(article+"\n\n\n")        
+            for paragraph in page.find_all(["p","ol","ul"]):
+                 if(sys.version_info >= (3, 0)):
+                     article_detail.append(paragraph.text.translate(non_bmp_map))
+                     article= "\n".join(article_detail)
+                     
+                 else:
+                     reload(sys)
+                     sys.setdefaultencoding('utf-8')
+                     article_detail.append(paragraph.text)
+                     article= "\n".join(article_detail)
+        #print(article+"\n\n\n")        
         fob.write(article)
         fob.close()
 except requests.RequestException as e :
