@@ -6,7 +6,9 @@ try:
     flag="idlelib" in sys.modules
     name=input("enter the company name like Amazon\n")
     article_links="http://www.geeksforgeeks.org/tag/"+name+"/"
-    path="/home/amit/Desktop/"
+    path=((r'/home/amit/Desktop/Interview_%s')% (name))
+    if not os.path.exists(path):
+        os.makedirs(path)
     non_bmp_map = dict.fromkeys(range(0x10000, sys.maxunicode + 1), 0xfffd)
     headers = {
     'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.143 Safari/537.36'}
@@ -30,7 +32,7 @@ try:
                 title=titl.text
         #print(path+title+' .txt')
         article_detail.append(title)
-        fob=open(path+title+' .txt','w')        
+        fob=open(os.path.join(path,title+' .txt'),'w')        
         for article in page.find_all('div',{'class':'entry-content'}):
             for paragraph in page.find_all(["p","ol","ul"]):
                  if(sys.version_info >= (3, 0)):
