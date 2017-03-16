@@ -13,19 +13,19 @@ try:
     headers = {
     'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.143 Safari/537.36'}
  
-    r = requests.get(article_links, headers=headers, timeout=155)    
+    r = requests.get(article_links, headers=headers, timeout=5)    
     page = BeautifulSoup(r.content, "lxml", parse_only=SoupStrainer('section'))
     links=[]
     for pagen in page.find_all('nav',{'id':'nav-below'}):
         
-        for pageno in pagen.find_all('span',{'class':'pages'}):
-            no=pageno.txt
-            print(no)
-            number=no[-2:]
+        for pageno in pagen.find_all('a',{'class':'last'}):
+            no=pageno.get("href")
+            number=int(no[-3:-1])
+            print(number)
         for loop in range(1,number+1):
             if(loop!=1):
-                article_links="http://www.geeksforgeeks.org/tag/"+name+"/page/"+loop+"/"
-                r=requests.get(article_links, headers=headers, timeout=155)
+                article_links="http://www.geeksforgeeks.org/tag/"+name+"/page/"+str(loop)+"/"
+                r=requests.get(article_links, headers=headers)
                 page=BeautifulSoup(r.content, "lxml", parse_only=SoupStrainer('section'))
             for title in page.find_all('h2',{'class':'entry-title'}):
                 for txt in title.find_all("a"):
@@ -36,14 +36,14 @@ try:
                 title=" "
                 article_detail=[]
                 article=" "
-                r = requests.get(link, headers=headers, timeout=155)    
+                r = requests.get(link, headers=headers)    
                 page = BeautifulSoup(r.content, "lxml", parse_only=SoupStrainer('article'))
                 for header in page.find_all('header',{'class':'entry-header'}):
                     for titl in header.find_all('h1',{'class':'entry-title'}):
                         title=titl.text
                 #print(path+title+' .txt')
                 article_detail.append(title)
-                fob=open(os.path.join(path,title+' .txt'),'w')        
+                fob=open(os.path.join(path,title+'.txt'),'w')        
                 for article in page.find_all('div',{'class':'entry-content'}):
                     for paragraph in page.find_all(["p","ol","ul"]):
                          if(sys.version_info >= (3, 0)):
