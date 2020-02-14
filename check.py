@@ -6,7 +6,7 @@ try:
     flag="idlelib" in sys.modules
     name=input("enter the company name like Amazon\n")
     article_links="http://www.geeksforgeeks.org/tag/"+name+"/"
-    path=((r'/home/amit/Desktop/Interview_%s')% (name))
+    path=((r'/home/meera/Desktop/Interview_%s')% (name))
     if not os.path.exists(path):
         os.makedirs(path)
     non_bmp_map = dict.fromkeys(range(0x10000, sys.maxunicode + 1), 0xfffd)
